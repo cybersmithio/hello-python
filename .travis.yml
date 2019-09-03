@@ -2,7 +2,6 @@ sudo: required
 language: python:2.7
 env:
   global:
-  - COMMIT=${TRAVIS_COMMIT::8}
   - IMAGE=hello-python
   - REPO=hello-python
   - secure: rLAZtSMePmc3l38iJC7Y5c1xWHS8uJqEVPgjRgYF2UPouprnjn/5oeLLoJZE1FCLh/vFVEnwPHz2/1Pgoi1WDe0JLZ3vV/Xi4t9zwaupFw3/LznxaNTzEDlqD7ZO2kF0WgOApOwKtuprjnQZGKsd+oXnB+F+ji+ERs7PIEeTIcKAjERFSKfHAbA8m0B3rc6/ImoVv6EAF7FLKQxVe/IMNBhvfmCr1Gf91DZac90gC5pX8TElB3b68EbUO2tJYE7bDICLk/1w3XGRX403/golYE4MEAdM62ylZHG4e9tKxNMRnudUScqSgRK/S3cfdtcbahraAG83YpRLvVcwwkmb6RhxFFHUtkO1iF0g0nxGIVJL98Ejggj0q0AgUTlh/G6mnwyaSAQckRmWc4cU6bbzSpYLKnAszrDmzresarb71oYkIqQObxTtBNXnubkzwBhq70Bq0RJcYBV0WwyoNXr8yw/mzjGft1ci+RISSgtedBIN2bDzL71bLQZp/52J6HL6zjDxnBh5jY4Ldumd6b0sv+kBzforovbfkdxtxpC6LVxjnn6bRNZM7/hqF/7DEaJztM0XSlxKoROVB21wfN4sUI9T3HHuvukKNXTz30sWUvRJ05MI33nPHT+tK+jEsZCEvmGxbiuLl9h3XKU4NDHlUjl+rrIQz22DnKSIribZqH0=
@@ -14,18 +13,13 @@ before_install:
 - docker version
 - docker build -t $IMAGE .
 - docker images
-- docker run -dt $IMAGE
 - docker ps -a
 script:
-- echo "Tests succeed!"
-after_success:
 - docker login tenableio-docker-consec-local.jfrog.io -u pubread -p $TENABLE_JFROG_PASSWORD
 - docker pull tenableio-docker-consec-local.jfrog.io/cs-scanner:latest
 - docker login -u $TENABLE_IO_ACCESS_KEY -p $TENABLE_IO_SECRET_KEY registry.cloud.tenable.com
-- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH;
-  fi`
-- docker build -f Dockerfile -t $IMAGE:$COMMIT .
 - docker save $IMAGE | docker run -e DEBUG_MODE=true -e TENABLE_ACCESS_KEY=$TENABLE_IO_ACCESS_KEY
   -e TENABLE_SECRET_KEY=$TENABLE_IO_SECRET_KEY -e IMPORT_REPO_NAME=$REPO -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest
   inspect-image $IMAGE:travis-$TRAVIS_BUILD_NUMBER
 - cat ./tiocs-check.sh | sh -s
+

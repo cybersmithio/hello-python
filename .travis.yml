@@ -1,5 +1,5 @@
 sudo: required
-language: python
+language: python:2.7
 env:
   global:
   - COMMIT=${TRAVIS_COMMIT::8}

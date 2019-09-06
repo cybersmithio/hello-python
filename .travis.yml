@@ -4,6 +4,7 @@ env:
   global:
   - IMAGE=hello-python
   - REPO=hello-python
+  - TAG=latest
   - secure: rLAZtSMePmc3l38iJC7Y5c1xWHS8uJqEVPgjRgYF2UPouprnjn/5oeLLoJZE1FCLh/vFVEnwPHz2/1Pgoi1WDe0JLZ3vV/Xi4t9zwaupFw3/LznxaNTzEDlqD7ZO2kF0WgOApOwKtuprjnQZGKsd+oXnB+F+ji+ERs7PIEeTIcKAjERFSKfHAbA8m0B3rc6/ImoVv6EAF7FLKQxVe/IMNBhvfmCr1Gf91DZac90gC5pX8TElB3b68EbUO2tJYE7bDICLk/1w3XGRX403/golYE4MEAdM62ylZHG4e9tKxNMRnudUScqSgRK/S3cfdtcbahraAG83YpRLvVcwwkmb6RhxFFHUtkO1iF0g0nxGIVJL98Ejggj0q0AgUTlh/G6mnwyaSAQckRmWc4cU6bbzSpYLKnAszrDmzresarb71oYkIqQObxTtBNXnubkzwBhq70Bq0RJcYBV0WwyoNXr8yw/mzjGft1ci+RISSgtedBIN2bDzL71bLQZp/52J6HL6zjDxnBh5jY4Ldumd6b0sv+kBzforovbfkdxtxpC6LVxjnn6bRNZM7/hqF/7DEaJztM0XSlxKoROVB21wfN4sUI9T3HHuvukKNXTz30sWUvRJ05MI33nPHT+tK+jEsZCEvmGxbiuLl9h3XKU4NDHlUjl+rrIQz22DnKSIribZqH0=
   - secure: ACwXI0wlbkLqTWf+aZoUbjKFc06p9NrugfnoEVWSY/Or4cq9hCy1DMFWlRqODKXzEZMZeHqd2sCb7dx3vYaWxnj7VQbyAB0ihXvXpU9Kp1hiK8wocVO1gxLyMijHHBAnoYW2ntXHk0NfpPVBbaATcejAN0xAJYBJVixl7WxsXb4oTeHIIuIo30Up6bnp08QDDB1/RFKBonERMe67dD6H8okx7Sx3wi4+4yhA5wVPZ61B0yNkSxtqHuovvJIsC99OFr7Rn/OjgHt06sV2G0w1mZfRT4ycS0CocVz5BTFpwpMLtoW/ibELXzBqZAu/uHlwnZUbM5/PJALGbNilkn+9/PlT94IawpSnjl++FgExjBpGkj7KYcVGGvkwrN8JyjSu1Nnuh5VIqquynW6ctg99+nwL+dyPw52L7Uaa5ojv1mdTdAM3wNnEeK3eM2xzJMI0J3ilOePbjjDFE+wE0xlhdoiWQyGCbnsw5unG2WheTtMcSG5vJehMbV2Nlt7WMNfOUTuCszVDq9sDQppxKH1wpfD1EHKPRMw7onFBtsRtx0B6Ku/yrbTzDaRDDHkQrqoyHCSXN/gH+6IfTEBgGLsKv8VQi1HSFkGWCyciogkKIpCHPO6gClh4OoIlbOd8tpdXEKd/nhc1Vw/NM0yx9nboBQB5cKOj3LacYASPtbcl2tk=
   - secure: FxREQmdn2GvYLX3GqV3ox8exJR92sl4tbXFiTNNERlVaUqCW5fAiceldBxdUyuIRshgZXwyfOuyryIp80rzA9HSXlANqclWNp7JltrjhDcuz/VmqzVBB0WOp8zX+7/QJXjFPq08Fj3qqhNDVQQH+R/j8mlecA7/bUQYRe3MPLNlWzmDeqAV+D5iVCApDxeZNp+oG1PyyHg5ZaiAFvLgc6hc30rZ1a2ZWHptEus5LyF9E92TO4tqYlKw5zCceVQJiUB0Hkyy2xYgphQs/o8Ys6Lam5qOes4YGCdfCz2HuU5xjSVdnOGXu30lqrCY7pEt8OOekKh432U9/dWhwugubx87D2VC2YH6u/KLUDMu+cxy9+Imlcy/hi3XzF3wQCIKI7NNcFE/100CIzEC8QjtwUeU437XB/W/ldZxEZ8KQfR1/rA4MPEUXLV063Mukv6oOMKnSodpJl4D6xbDvFthvzLckyywDe7Uc+j0cX+SSQ/s+09h6gsCmeP2JagrapCenICSsY71BC03OqD1KJ6mRmN+s2WFKsSRkUUJKHKDE2VRfFfpPwMWwTPYFJGtpRJtQSgNG5IYkCkbh6uoFb4HE2e71Af4hlPrR5TRYPqQgPlHfipyA4qesQtiiuh48xWQ0zVKgjw0qMMtL7zcnIjxYVafzx4eztfTN8ToxqlvLbv0=
@@ -11,14 +12,14 @@ services:
 - docker
 before_install:
 - docker version
-- docker build -t $IMAGE .
+- docker build -t $IMAGE:$TAG .
 - docker images
 - docker ps -a
 script:
 - docker login tenableio-docker-consec-local.jfrog.io -u pubread -p $TENABLE_JFROG_PASSWORD
 - docker pull tenableio-docker-consec-local.jfrog.io/cs-scanner:latest
 - docker login -u $TENABLE_IO_ACCESS_KEY -p $TENABLE_IO_SECRET_KEY registry.cloud.tenable.com
-- docker save $IMAGE | docker run -e DEBUG_MODE=true -e TENABLE_ACCESS_KEY=$TENABLE_IO_ACCESS_KEY
+- docker save $IMAGE:$TAG | docker run -e DEBUG_MODE=true -e TENABLE_ACCESS_KEY=$TENABLE_IO_ACCESS_KEY
   -e TENABLE_SECRET_KEY=$TENABLE_IO_SECRET_KEY -e IMPORT_REPO_NAME=$REPO -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest
   inspect-image $IMAGE:travis-$TRAVIS_BUILD_NUMBER
 - cat ./tiocs-check.sh | sh -s

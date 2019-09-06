@@ -21,6 +21,6 @@ script:
 - docker login -u $TENABLE_IO_ACCESS_KEY -p $TENABLE_IO_SECRET_KEY registry.cloud.tenable.com
 - docker save $IMAGE:$TAG | docker run -e DEBUG_MODE=true -e TENABLE_ACCESS_KEY=$TENABLE_IO_ACCESS_KEY
   -e TENABLE_SECRET_KEY=$TENABLE_IO_SECRET_KEY -e IMPORT_REPO_NAME=$REPO -i tenableio-docker-consec-local.jfrog.io/cs-scanner:latest
-  inspect-image $IMAGE:travis-$TRAVIS_BUILD_NUMBER
+  inspect-image $IMAGE:$TAG
 - cat ./tiocs-check.sh | sh -s
 
